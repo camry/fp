@@ -193,7 +193,7 @@ func Lerp(a, b, t int64) int64 {
     return Mul(a, t) + Mul(b, One-t)
 }
 
-func Nlz(v uint64) int32 {
+func nlz(v uint64) int32 {
     var n int32 = 0
     if v <= 0x00000000FFFFFFFF {
         n = n + 32
@@ -251,7 +251,7 @@ func DivPrecise(argA, argB int64) int64 {
     }
 
     // Shift amount for norm
-    s := Nlz(v)    // 0 <= s <= 63
+    s := nlz(v)    // 0 <= s <= 63
     v = v << s     // Normalize the divisor
     vn1 := v >> 32 // Break the divisor into two 32-bit digits
     vn0 := v & 0xffffffff
@@ -315,7 +315,7 @@ func Div(a, b int64) int64 {
     b *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(b))
+    offset := 31 - nlz(uint64(b))
     n := int32(fp.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
@@ -343,7 +343,7 @@ func DivFast(a, b int64) int64 {
     b *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(b))
+    offset := 31 - nlz(uint64(b))
     n := int32(fp.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
@@ -371,7 +371,7 @@ func DivFastest(a, b int64) int64 {
     b *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(b))
+    offset := 31 - nlz(uint64(b))
     n := int32(fp.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
@@ -422,7 +422,7 @@ func Sqrt(x int64) int64 {
     const SQRT2 int32 = 1518500249 // sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -461,7 +461,7 @@ func SqrtFast(x int64) int64 {
     const SQRT2 int32 = 1518500249 // sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -499,7 +499,7 @@ func SqrtFastest(x int64) int64 {
     const SQRT2 int32 = 1518500249 // sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -538,7 +538,7 @@ func RSqrt(x int64) int64 {
     const HalfSqrt2 int32 = 759250125 // 0.5 * sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -577,7 +577,7 @@ func RSqrtFast(x int64) int64 {
     const HalfSqrt2 int32 = 759250125 // 0.5 * sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -616,7 +616,7 @@ func RSqrtFastest(x int64) int64 {
     const HalfSqrt2 int32 = 759250125 // 0.5 * sqrt(2.0)
 
     // Normalize input into [1.0, 2.0( range (as s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -660,7 +660,7 @@ func Rcp(x int64) int64 {
     x *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     n := int32(fp.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
@@ -688,7 +688,7 @@ func RcpFast(x int64) int64 {
     x *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     n := int32(fp.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
@@ -716,7 +716,7 @@ func RcpFastest(x int64) int64 {
     x *= int64(sign)
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     n := int32(fp.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
@@ -820,7 +820,7 @@ func Log(x int64) int64 {
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -842,7 +842,7 @@ func LogFast(x int64) int64 {
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -864,7 +864,7 @@ func LogFastest(x int64) int64 {
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -884,7 +884,7 @@ func Log2(x int64) int64 {
     }
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -907,7 +907,7 @@ func Log2Fast(x int64) int64 {
     }
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -930,7 +930,7 @@ func Log2Fastest(x int64) int64 {
     }
 
     // Normalize value to range [1.0, 2.0( as s2.30 and extract exponent.
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -992,7 +992,7 @@ func PowFastest(x, exponent int64) int64 {
     return ExpFastest(Mul(exponent, LogFastest(x)))
 }
 
-func UnitSin(z int32) int32 {
+func unitSin(z int32) int32 {
     // See: http://www.coranac.com/2009/07/sines/
 
     // Handle quadrants 1 and 2 by mirroring the [1, 3] range to [-1, 1] (by calculating 2 - z).
@@ -1009,7 +1009,7 @@ func UnitSin(z int32) int32 {
     return res
 }
 
-func UnitSinFast(z int32) int32 {
+func unitSinFast(z int32) int32 {
     // See: http://www.coranac.com/2009/07/sines/
 
     // Handle quadrants 1 and 2 by mirroring the [1, 3] range to [-1, 1] (by calculating 2 - z).
@@ -1026,7 +1026,7 @@ func UnitSinFast(z int32) int32 {
     return res
 }
 
-func UnitSinFastest(z int32) int32 {
+func unitSinFastest(z int32) int32 {
     // See: http://www.coranac.com/2009/07/sines/
 
     // Handle quadrants 1 and 2 by mirroring the [1, 3] range to [-1, 1] (by calculating 2 - z).
@@ -1049,7 +1049,7 @@ func Sin(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
 
     // Compute sine and convert to s32.32.
-    return int64(UnitSin(z)) << 2
+    return int64(unitSin(z)) << 2
 }
 
 func SinFast(x int64) int64 {
@@ -1058,7 +1058,7 @@ func SinFast(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
 
     // Compute sine and convert to s32.32.
-    return int64(UnitSinFast(z)) << 2
+    return int64(unitSinFast(z)) << 2
 }
 
 func SinFastest(x int64) int64 {
@@ -1067,7 +1067,7 @@ func SinFastest(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
 
     // Compute sine and convert to s32.32.
-    return int64(UnitSinFastest(z)) << 2
+    return int64(unitSinFastest(z)) << 2
 }
 
 func Cos(x int64) int64 {
@@ -1084,29 +1084,29 @@ func CosFastest(x int64) int64 {
 
 func Tan(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
-    sinX := int64(UnitSin(z)) << 32
-    cosX := int64(UnitSin(z+(1<<30))) << 32
+    sinX := int64(unitSin(z)) << 32
+    cosX := int64(unitSin(z+(1<<30))) << 32
     return Div(sinX, cosX)
 }
 
 func TanFast(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
-    sinX := int64(UnitSinFast(z)) << 32
-    cosX := int64(UnitSinFast(z+(1<<30))) << 32
+    sinX := int64(unitSinFast(z)) << 32
+    cosX := int64(unitSinFast(z+(1<<30))) << 32
     return DivFast(sinX, cosX)
 }
 
 func TanFastest(x int64) int64 {
     z := MulIntLongLow(RcpHalfPi, x)
-    sinX := int64(UnitSinFastest(z)) << 32
-    cosX := int64(UnitSinFastest(z+(1<<30))) << 32
+    sinX := int64(unitSinFastest(z)) << 32
+    cosX := int64(unitSinFastest(z+(1<<30))) << 32
     return DivFastest(sinX, cosX)
 }
 
-func Atan2Div(y, x int64) int32 {
+func atan2Div(y, x int64) int32 {
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -1129,10 +1129,10 @@ func Atan2Div(y, x int64) int32 {
     return fp.Qmul30(int32(yr>>2), oox)
 }
 
-func Atan2DivFast(y, x int64) int32 {
+func atan2DivFast(y, x int64) int32 {
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -1155,10 +1155,10 @@ func Atan2DivFast(y, x int64) int32 {
     return fp.Qmul30(int32(yr>>2), oox)
 }
 
-func Atan2DivFastest(y, x int64) int32 {
+func atan2DivFastest(y, x int64) int32 {
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     const ONE int32 = 1 << 30
-    offset := 31 - Nlz(uint64(x))
+    offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
         n = x >> offset
@@ -1200,7 +1200,7 @@ func Atan2(y, x int64) int64 {
     negMask := (x ^ y) >> 63
 
     if nx >= ny {
-        k := Atan2Div(ny, nx)
+        k := atan2Div(ny, nx)
         z := fp.AtanPoly5Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
@@ -1211,7 +1211,7 @@ func Atan2(y, x int64) int64 {
         }
         return angle - Pi
     } else {
-        k := Atan2Div(nx, ny)
+        k := atan2Div(nx, ny)
         z := fp.AtanPoly5Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
@@ -1241,7 +1241,7 @@ func Atan2Fast(y, x int64) int64 {
     negMask := (x ^ y) >> 63
 
     if nx >= ny {
-        k := Atan2DivFast(ny, nx)
+        k := atan2DivFast(ny, nx)
         z := fp.AtanPoly3Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
@@ -1252,7 +1252,7 @@ func Atan2Fast(y, x int64) int64 {
         }
         return angle - Pi
     } else {
-        k := Atan2DivFast(nx, ny)
+        k := atan2DivFast(nx, ny)
         z := fp.AtanPoly3Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
@@ -1282,7 +1282,7 @@ func Atan2Fastest(y, x int64) int64 {
     negMask := (x ^ y) >> 63
 
     if nx >= ny {
-        k := Atan2DivFastest(ny, nx)
+        k := atan2DivFastest(ny, nx)
         z := fp.AtanPoly4(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
@@ -1293,7 +1293,7 @@ func Atan2Fastest(y, x int64) int64 {
         }
         return angle - Pi
     } else {
-        k := Atan2DivFastest(nx, ny)
+        k := atan2DivFastest(nx, ny)
         z := fp.AtanPoly4(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
