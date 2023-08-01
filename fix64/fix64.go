@@ -425,9 +425,9 @@ func Sqrt(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.SqrtPoly3Lut8(n - ONE)
@@ -464,9 +464,9 @@ func SqrtFast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.SqrtPoly4(n - ONE)
@@ -502,9 +502,9 @@ func SqrtFastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.SqrtPoly3(n - ONE)
@@ -541,9 +541,9 @@ func RSqrt(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.RSqrtPoly3Lut16(n - ONE)
@@ -580,9 +580,9 @@ func RSqrtFast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.RSqrtPoly5(n - ONE)
@@ -619,9 +619,9 @@ func RSqrtFastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := fp.RSqrtPoly3(n - ONE)
@@ -823,9 +823,9 @@ func Log(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := int64(fp.LogPoly5Lut8(n-ONE) << 2)
@@ -845,9 +845,9 @@ func LogFast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := int64(fp.LogPoly3Lut8(n-ONE) << 2)
@@ -867,9 +867,9 @@ func LogFastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     y := int64(fp.LogPoly5(n-ONE) << 2)
@@ -887,9 +887,9 @@ func Log2(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
 
@@ -910,9 +910,9 @@ func Log2Fast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
 
@@ -933,9 +933,9 @@ func Log2Fastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
 
@@ -1109,9 +1109,9 @@ func atan2Div(y, x int64) int32 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     k := n - ONE
@@ -1135,9 +1135,9 @@ func atan2DivFast(y, x int64) int32 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     k := n - ONE
@@ -1161,9 +1161,9 @@ func atan2DivFastest(y, x int64) int32 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = x >> offset
+        n = int32(x >> offset)
     } else {
-        n = x << -offset
+        n = int32(x << -offset)
     }
     n >>= 2
     k := n - ONE
