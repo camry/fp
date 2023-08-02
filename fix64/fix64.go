@@ -1,9 +1,8 @@
 package fix64
 
 import (
+    "github.com/camry/fp/fixutil"
     "strconv"
-
-    "github.com/camry/fp"
 )
 
 const (
@@ -173,19 +172,19 @@ func Mul(a, b int64) int64 {
     af := a & FractionMask
     bi := b >> Shift
     bf := b & FractionMask
-    return fp.LogicalShiftRight(af*bf, Shift) + ai*b + af*bi
+    return fixutil.LogicalShiftRight(af*bf, Shift) + ai*b + af*bi
 }
 
 func MulIntLongLow(a int32, b int64) int32 {
     bi := b >> Shift
     bf := b & FractionMask
-    return int32(fp.LogicalShiftRight(int64(a)*bf, Shift) + int64(a)*bi)
+    return int32(fixutil.LogicalShiftRight(int64(a)*bf, Shift) + int64(a)*bi)
 }
 
 func MulIntLongLong(a int32, b int64) int64 {
     bi := b >> Shift
     bf := b & FractionMask
-    return fp.LogicalShiftRight(int64(a)*bf, Shift) + int64(a)*bi
+    return fixutil.LogicalShiftRight(int64(a)*bf, Shift) + int64(a)*bi
 }
 
 // Lerp Linearly interpolate from a to b by t.
@@ -316,15 +315,15 @@ func Div(a, b int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(b))
-    n := int32(fp.Int64ShiftRight(b, offset+2))
+    n := int32(fixutil.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly4Lut8(n - ONE)
+    res := fixutil.RcpPoly4Lut8(n - ONE)
 
     // Apply exponent, convert back to s32.32.
     y := MulIntLongLong(res, a) << 2
-    return fp.Int64ShiftRight(int64(sign)*y, offset)
+    return fixutil.Int64ShiftRight(int64(sign)*y, offset)
 }
 
 // DivFast Calculates division approximation.
@@ -344,15 +343,15 @@ func DivFast(a, b int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(b))
-    n := int32(fp.Int64ShiftRight(b, offset+2))
+    n := int32(fixutil.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly6(n - ONE)
+    res := fixutil.RcpPoly6(n - ONE)
 
     // Apply exponent, convert back to s32.32.
     y := MulIntLongLong(res, a) << 2
-    return fp.Int64ShiftRight(int64(sign)*y, offset)
+    return fixutil.Int64ShiftRight(int64(sign)*y, offset)
 }
 
 // DivFastest Calculates division approximation.
@@ -372,15 +371,15 @@ func DivFastest(a, b int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(b))
-    n := int32(fp.Int64ShiftRight(b, offset+2))
+    n := int32(fixutil.Int64ShiftRight(b, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly4(n - ONE)
+    res := fixutil.RcpPoly4(n - ONE)
 
     // Apply exponent, convert back to s32.32.
     y := MulIntLongLong(res, a) << 2
-    return fp.Int64ShiftRight(int64(sign)*y, offset)
+    return fixutil.Int64ShiftRight(int64(sign)*y, offset)
 }
 
 // Mod Divides two FP values and returns the modulus.
@@ -430,7 +429,7 @@ func Sqrt(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.SqrtPoly3Lut8(n - ONE)
+    y := fixutil.SqrtPoly3Lut8(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -443,7 +442,7 @@ func Sqrt(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr << offset
     } else {
@@ -469,7 +468,7 @@ func SqrtFast(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.SqrtPoly4(n - ONE)
+    y := fixutil.SqrtPoly4(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -481,7 +480,7 @@ func SqrtFast(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr << offset
     } else {
@@ -507,7 +506,7 @@ func SqrtFastest(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.SqrtPoly3(n - ONE)
+    y := fixutil.SqrtPoly3(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -519,7 +518,7 @@ func SqrtFastest(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr << offset
     } else {
@@ -546,7 +545,7 @@ func RSqrt(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.RSqrtPoly3Lut16(n - ONE)
+    y := fixutil.RSqrtPoly3Lut16(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -558,7 +557,7 @@ func RSqrt(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr >> offset
     } else {
@@ -585,7 +584,7 @@ func RSqrtFast(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.RSqrtPoly5(n - ONE)
+    y := fixutil.RSqrtPoly5(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -597,7 +596,7 @@ func RSqrtFast(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr >> offset
     } else {
@@ -624,7 +623,7 @@ func RSqrtFastest(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := fp.RSqrtPoly3(n - ONE)
+    y := fixutil.RSqrtPoly3(n - ONE)
 
     // Divide offset by 2 (to get sqrt), compute adjust value for odd exponents.
     var adjust int32
@@ -636,7 +635,7 @@ func RSqrtFastest(x int64) int64 {
     offset = offset >> 1
 
     // Apply exponent, convert back to s32.32.
-    yr := int64(fp.Qmul30(adjust, y) << 2)
+    yr := int64(fixutil.Qmul30(adjust, y) << 2)
     if offset >= 0 {
         return yr >> offset
     } else {
@@ -661,15 +660,15 @@ func Rcp(x int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(x))
-    n := int32(fp.Int64ShiftRight(x, offset+2))
+    n := int32(fixutil.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly4Lut8(n - ONE)
+    res := fixutil.RcpPoly4Lut8(n - ONE)
     y := int64(sign*res) << 2
 
     // Apply exponent, convert back to s32.32.
-    return fp.Int64ShiftRight(y, offset)
+    return fixutil.Int64ShiftRight(y, offset)
 }
 
 // RcpFast Calculates reciprocal approximation.
@@ -689,15 +688,15 @@ func RcpFast(x int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(x))
-    n := int32(fp.Int64ShiftRight(x, offset+2))
+    n := int32(fixutil.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly6(n - ONE)
+    res := fixutil.RcpPoly6(n - ONE)
     y := int64(sign*res) << 2
 
     // Apply exponent, convert back to s32.32.
-    return fp.Int64ShiftRight(y, offset)
+    return fixutil.Int64ShiftRight(y, offset)
 }
 
 // RcpFastest Calculates reciprocal approximation.
@@ -717,15 +716,15 @@ func RcpFastest(x int64) int64 {
 
     // Normalize input into [1.0, 2.0( range (convert to s2.30).
     offset := 31 - nlz(uint64(x))
-    n := int32(fp.Int64ShiftRight(x, offset+2))
+    n := int32(fixutil.Int64ShiftRight(x, offset+2))
     const ONE int32 = 1 << 30
 
     // Polynomial approximation.
-    res := fp.RcpPoly4(n - ONE)
+    res := fixutil.RcpPoly4(n - ONE)
     y := int64(sign*res) << 2
 
     // Apply exponent, convert back to s32.32.
-    return fp.Int64ShiftRight(y, offset)
+    return fixutil.Int64ShiftRight(y, offset)
 }
 
 // Exp2 Calculates the base 2 exponent.
@@ -740,7 +739,7 @@ func Exp2(x int64) int64 {
 
     // Compute exp2 for fractional part.
     k := int32((x & FractionMask) >> 2)
-    y := int64(fp.Exp2Poly5(k)) << 2
+    y := int64(fixutil.Exp2Poly5(k)) << 2
 
     // Combine integer and fractional result, and convert back to s32.32.
     intPart := int32(x >> Shift)
@@ -763,7 +762,7 @@ func Exp2Fast(x int64) int64 {
 
     // Compute exp2 for fractional part.
     k := int32((x & FractionMask) >> 2)
-    y := int64(fp.Exp2Poly4(k)) << 2
+    y := int64(fixutil.Exp2Poly4(k)) << 2
 
     // Combine integer and fractional result, and convert back to s32.32.
     intPart := int32(x >> Shift)
@@ -786,7 +785,7 @@ func Exp2Fastest(x int64) int64 {
 
     // Compute exp2 for fractional part.
     k := int32((x & FractionMask) >> 2)
-    y := int64(fp.Exp2Poly3(k)) << 2
+    y := int64(fixutil.Exp2Poly3(k)) << 2
 
     // Combine integer and fractional result, and convert back to s32.32.
     intPart := int32(x >> Shift)
@@ -828,7 +827,7 @@ func Log(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := int64(fp.LogPoly5Lut8(n-ONE) << 2)
+    y := int64(fixutil.LogPoly5Lut8(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return int64(offset)*RcpLog2E + y
@@ -850,7 +849,7 @@ func LogFast(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := int64(fp.LogPoly3Lut8(n-ONE) << 2)
+    y := int64(fixutil.LogPoly3Lut8(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return int64(offset)*RcpLog2E + y
@@ -872,7 +871,7 @@ func LogFastest(x int64) int64 {
         n = int32(x << -offset)
     }
     n >>= 2
-    y := int64(fp.LogPoly5(n-ONE) << 2)
+    y := int64(fixutil.LogPoly5(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return int64(offset)*RcpLog2E + y
@@ -895,7 +894,7 @@ func Log2(x int64) int64 {
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
-    y := int64(fp.Log2Poly4Lut16(n-ONE) << 2)
+    y := int64(fixutil.Log2Poly4Lut16(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return (int64(offset) << Shift) + y
@@ -918,7 +917,7 @@ func Log2Fast(x int64) int64 {
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
-    y := int64(fp.Log2Poly3Lut16(n-ONE) << 2)
+    y := int64(fixutil.Log2Poly3Lut16(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return (int64(offset) << Shift) + y
@@ -941,7 +940,7 @@ func Log2Fastest(x int64) int64 {
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
-    y := int64(fp.Log2Poly5(n-ONE) << 2)
+    y := int64(fixutil.Log2Poly5(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
     return (int64(offset) << Shift) + y
@@ -1002,8 +1001,8 @@ func unitSin(z int32) int32 {
     }
 
     // Polynomial approximation.
-    zz := fp.Qmul30(z, z)
-    res := fp.Qmul30(fp.SinPoly4(zz), z)
+    zz := fixutil.Qmul30(z, z)
+    res := fixutil.Qmul30(fixutil.SinPoly4(zz), z)
 
     // Return s2.30 value.
     return res
@@ -1019,8 +1018,8 @@ func unitSinFast(z int32) int32 {
     }
 
     // Polynomial approximation.
-    zz := fp.Qmul30(z, z)
-    res := fp.Qmul30(fp.SinPoly3(zz), z)
+    zz := fixutil.Qmul30(z, z)
+    res := fixutil.Qmul30(fixutil.SinPoly3(zz), z)
 
     // Return s2.30 value.
     return res
@@ -1036,8 +1035,8 @@ func unitSinFastest(z int32) int32 {
     }
 
     // Polynomial approximation.
-    zz := fp.Qmul30(z, z)
-    res := fp.Qmul30(fp.SinPoly2(zz), z)
+    zz := fixutil.Qmul30(z, z)
+    res := fixutil.Qmul30(fixutil.SinPoly2(zz), z)
 
     // Return s2.30 value.
     return res
@@ -1117,7 +1116,7 @@ func atan2Div(y, x int64) int32 {
     k := n - ONE
 
     // Polynomial approximation of reciprocal.
-    oox := fp.RcpPoly4Lut8(k)
+    oox := fixutil.RcpPoly4Lut8(k)
 
     // Apply exponent and multiply.
     var yr int64
@@ -1126,7 +1125,7 @@ func atan2Div(y, x int64) int32 {
     } else {
         yr = y << -offset
     }
-    return fp.Qmul30(int32(yr>>2), oox)
+    return fixutil.Qmul30(int32(yr>>2), oox)
 }
 
 func atan2DivFast(y, x int64) int32 {
@@ -1143,7 +1142,7 @@ func atan2DivFast(y, x int64) int32 {
     k := n - ONE
 
     // Polynomial approximation of reciprocal.
-    oox := fp.RcpPoly6(k)
+    oox := fixutil.RcpPoly6(k)
 
     // Apply exponent and multiply.
     var yr int64
@@ -1152,7 +1151,7 @@ func atan2DivFast(y, x int64) int32 {
     } else {
         yr = y << -offset
     }
-    return fp.Qmul30(int32(yr>>2), oox)
+    return fixutil.Qmul30(int32(yr>>2), oox)
 }
 
 func atan2DivFastest(y, x int64) int32 {
@@ -1169,7 +1168,7 @@ func atan2DivFastest(y, x int64) int32 {
     k := n - ONE
 
     // Polynomial approximation of reciprocal.
-    oox := fp.RcpPoly4(k)
+    oox := fixutil.RcpPoly4(k)
 
     // Apply exponent and multiply.
     var yr int64
@@ -1178,7 +1177,7 @@ func atan2DivFastest(y, x int64) int32 {
     } else {
         yr = y << -offset
     }
-    return fp.Qmul30(int32(yr>>2), oox)
+    return fixutil.Qmul30(int32(yr>>2), oox)
 }
 
 func Atan2(y, x int64) int64 {
@@ -1201,7 +1200,7 @@ func Atan2(y, x int64) int64 {
 
     if nx >= ny {
         k := atan2Div(ny, nx)
-        z := fp.AtanPoly5Lut8(k)
+        z := fixutil.AtanPoly5Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
             return angle
@@ -1212,7 +1211,7 @@ func Atan2(y, x int64) int64 {
         return angle - Pi
     } else {
         k := atan2Div(nx, ny)
-        z := fp.AtanPoly5Lut8(k)
+        z := fixutil.AtanPoly5Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
             return PiHalf - angle
@@ -1242,7 +1241,7 @@ func Atan2Fast(y, x int64) int64 {
 
     if nx >= ny {
         k := atan2DivFast(ny, nx)
-        z := fp.AtanPoly3Lut8(k)
+        z := fixutil.AtanPoly3Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
             return angle
@@ -1253,7 +1252,7 @@ func Atan2Fast(y, x int64) int64 {
         return angle - Pi
     } else {
         k := atan2DivFast(nx, ny)
-        z := fp.AtanPoly3Lut8(k)
+        z := fixutil.AtanPoly3Lut8(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
             return PiHalf - angle
@@ -1283,7 +1282,7 @@ func Atan2Fastest(y, x int64) int64 {
 
     if nx >= ny {
         k := atan2DivFastest(ny, nx)
-        z := fp.AtanPoly4(k)
+        z := fixutil.AtanPoly4(k)
         angle := negMask ^ (int64(z) << 2)
         if x > 0 {
             return angle
@@ -1294,7 +1293,7 @@ func Atan2Fastest(y, x int64) int64 {
         return angle - Pi
     } else {
         k := atan2DivFastest(nx, ny)
-        z := fp.AtanPoly4(k)
+        z := fixutil.AtanPoly4(k)
         angle := negMask ^ (int64(z) << 2)
         if y > 0 {
             return PiHalf - angle

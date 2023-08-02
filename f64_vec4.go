@@ -1,4 +1,4 @@
-package fixmath
+package fp
 
 import (
     "fmt"

@@ -1,4 +1,4 @@
-package fp
+package fixutil
 
 func Qmul29(a, b int32) int32 {
     return (int32)(int64(a) * int64(b) >> 29)
