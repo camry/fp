@@ -1,4 +1,4 @@
-package f32
+package fixmath
 
 type F32 struct {
     Raw int32

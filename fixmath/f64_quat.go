@@ -1,4 +1,4 @@
-package f64
+package fixmath
 
 import (
     "fmt"
@@ -9,15 +9,15 @@ import (
 
 var Identity = QuatFromRaw(fix64.Zero, fix64.Zero, fix64.Zero, fix64.One)
 
-type Quat struct {
+type F64Quat struct {
     RawX int64
     RawY int64
     RawZ int64
     RawW int64
 }
 
-func QuatFromRaw(x, y, z, w int64) Quat {
-    return Quat{
+func QuatFromRaw(x, y, z, w int64) F64Quat {
+    return F64Quat{
         RawX: x,
         RawY: y,
         RawZ: z,
@@ -25,8 +25,8 @@ func QuatFromRaw(x, y, z, w int64) Quat {
     }
 }
 
-func FromF64(x, y, z, w F64) Quat {
-    return Quat{
+func FromF64(x, y, z, w F64) F64Quat {
+    return F64Quat{
         RawX: x.Raw,
         RawY: y.Raw,
         RawZ: z.Raw,
@@ -34,8 +34,8 @@ func FromF64(x, y, z, w F64) Quat {
     }
 }
 
-func FromVector(v Vec3, w F64) Quat {
-    return Quat{
+func FromVector(v F64Vec3, w F64) F64Quat {
+    return F64Quat{
         RawX: v.RawX,
         RawY: v.RawY,
         RawZ: v.RawZ,
@@ -43,13 +43,13 @@ func FromVector(v Vec3, w F64) Quat {
     }
 }
 
-func FromAxisAngle(axis Vec3, angle F64) Quat {
+func FromAxisAngle(axis F64Vec3, angle F64) F64Quat {
     halfAngle := angle.Div2()
     halfAngleSinFastest := halfAngle.SinFastest()
     return FromVector(axis.Mul(Vec3FromF64(halfAngleSinFastest, halfAngleSinFastest, halfAngleSinFastest)), halfAngle.CosFastest())
 }
 
-func FromYawPitchRoll(yawY, pitchX, rollZ F64) Quat {
+func FromYawPitchRoll(yawY, pitchX, rollZ F64) F64Quat {
     //  Roll first, about axis the object is facing, then
     //  pitch upward, then yaw to face into the new heading
     halfRoll := rollZ.Div2()
@@ -72,25 +72,25 @@ func FromYawPitchRoll(yawY, pitchX, rollZ F64) Quat {
     )
 }
 
-func FromTwoVectors(a, b Vec3) Quat {
+func FromTwoVectors(a, b F64Vec3) F64Quat {
     // From: http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
-    epsilon := Ratio(1, 1000000)
+    epsilon := F64Ratio(1, 1000000)
 
     normANormB := (a.LengthSqr().Mul(b.LengthSqr())).SqrtFastest()
     realPart := normANormB.Add(a.Dot(b))
 
-    var v Vec3
+    var v F64Vec3
 
     if realPart.LT(epsilon.Mul(normANormB)) {
         /* If u and v are exactly opposite, rotate 180 degrees
          * around an arbitrary orthogonal axis. Axis normalization
          * can happen later, when we normalize the quaternion. */
-        realPart = Zero
+        realPart = F64Zero
         cond := a.X().Abs().GT(a.Z().Abs())
         if cond {
-            v = Vec3FromF64(a.Y().Negate(), a.X(), Zero)
+            v = Vec3FromF64(a.Y().Negate(), a.X(), F64Zero)
         } else {
-            v = Vec3FromF64(Zero, a.Z().Negate(), a.Y())
+            v = Vec3FromF64(F64Zero, a.Z().Negate(), a.Y())
         }
     } else {
         /* Otherwise, build quaternion the standard way. */
@@ -100,7 +100,7 @@ func FromTwoVectors(a, b Vec3) Quat {
     return FromVector(v, realPart).NormalizeFastest()
 }
 
-func LookRotation(dir, up Vec3) Quat {
+func LookRotation(dir, up F64Vec3) F64Quat {
     // From: https://answers.unity.com/questions/819699/calculate-quaternionlookrotation-manually.html
     if dir == Vec3Zero {
         return Identity
@@ -117,52 +117,52 @@ func LookRotation(dir, up Vec3) Quat {
     }
 }
 
-func LookAtRotation(from, to, up Vec3) Quat {
+func LookAtRotation(from, to, up F64Vec3) F64Quat {
     dir := (to.Sub(from)).NormalizeFastest()
     return LookRotation(dir, up)
 }
 
-func (q Quat) QuatX() F64 {
-    return FromRaw(q.RawX)
+func (q F64Quat) QuatX() F64 {
+    return F64FromRaw(q.RawX)
 }
 
-func (q Quat) QuatY() F64 {
-    return FromRaw(q.RawY)
+func (q F64Quat) QuatY() F64 {
+    return F64FromRaw(q.RawY)
 }
 
-func (q Quat) QuatZ() F64 {
-    return FromRaw(q.RawZ)
+func (q F64Quat) QuatZ() F64 {
+    return F64FromRaw(q.RawZ)
 }
 
-func (q Quat) QuatW() F64 {
-    return FromRaw(q.RawW)
+func (q F64Quat) QuatW() F64 {
+    return F64FromRaw(q.RawW)
 }
 
-func (q Quat) Mul(b Quat) Quat {
+func (q F64Quat) Mul(b F64Quat) F64Quat {
     return q.Multiply(b)
 }
 
 // EQ q == b
-func (q Quat) EQ(b Quat) bool {
+func (q F64Quat) EQ(b F64Quat) bool {
     return q.RawX == b.RawX && q.RawY == b.RawY && q.RawZ == b.RawZ && q.RawW == b.RawW
 }
 
 // NE q != b
-func (q Quat) NE(b Quat) bool {
+func (q F64Quat) NE(b F64Quat) bool {
     return q.RawX != b.RawX || q.RawY != b.RawY || q.RawZ != b.RawZ || q.RawW != b.RawW
 }
 
 // Negate -q.RawX, -q.RawY, -q.RawZ, -q.RawW
-func (q Quat) Negate() Quat {
+func (q F64Quat) Negate() F64Quat {
     return QuatFromRaw(-q.RawX, -q.RawY, -q.RawZ, -q.RawW)
 }
 
 // Conjugate -q.RawX, -q.RawY, -q.RawZ, q.RawW
-func (q Quat) Conjugate() Quat {
+func (q F64Quat) Conjugate() F64Quat {
     return QuatFromRaw(-q.RawX, -q.RawY, -q.RawZ, q.RawW)
 }
 
-func (q Quat) Inverse() Quat {
+func (q F64Quat) Inverse() F64Quat {
     invNorm := q.LengthSqr().Rcp().Raw
     return QuatFromRaw(
         -fix64.Mul(q.RawX, invNorm),
@@ -172,11 +172,11 @@ func (q Quat) Inverse() Quat {
     )
 }
 
-func (q Quat) InverseUnit() Quat {
+func (q F64Quat) InverseUnit() F64Quat {
     return QuatFromRaw(-q.RawX, -q.RawY, -q.RawZ, q.RawW)
 }
 
-func (q Quat) Multiply(b Quat) Quat {
+func (q F64Quat) Multiply(b F64Quat) F64Quat {
     q1x := q.QuatX()
     q1y := q.QuatY()
     q1z := q.QuatZ()
@@ -202,23 +202,23 @@ func (q Quat) Multiply(b Quat) Quat {
     )
 }
 
-func (q Quat) Length() F64 {
+func (q F64Quat) Length() F64 {
     return q.LengthSqr().Sqrt()
 }
 
-func (q Quat) LengthFast() F64 {
+func (q F64Quat) LengthFast() F64 {
     return q.LengthSqr().SqrtFast()
 }
 
-func (q Quat) LengthFastest() F64 {
+func (q F64Quat) LengthFastest() F64 {
     return q.LengthSqr().SqrtFastest()
 }
 
-func (q Quat) LengthSqr() F64 {
-    return FromRaw(fix64.Mul(q.RawX, q.RawX) + fix64.Mul(q.RawY, q.RawY) + fix64.Mul(q.RawZ, q.RawZ) + fix64.Mul(q.RawW, q.RawW))
+func (q F64Quat) LengthSqr() F64 {
+    return F64FromRaw(fix64.Mul(q.RawX, q.RawX) + fix64.Mul(q.RawY, q.RawY) + fix64.Mul(q.RawZ, q.RawZ) + fix64.Mul(q.RawW, q.RawW))
 }
 
-func (q Quat) Normalize() Quat {
+func (q F64Quat) Normalize() F64Quat {
     invNorm := q.Length().Rcp().Raw
     return QuatFromRaw(
         fix64.Mul(q.RawX, invNorm),
@@ -228,7 +228,7 @@ func (q Quat) Normalize() Quat {
     )
 }
 
-func (q Quat) NormalizeFast() Quat {
+func (q F64Quat) NormalizeFast() F64Quat {
     invNorm := q.LengthFast().RcpFast().Raw
     return QuatFromRaw(
         fix64.Mul(q.RawX, invNorm),
@@ -238,7 +238,7 @@ func (q Quat) NormalizeFast() Quat {
     )
 }
 
-func (q Quat) NormalizeFastest() Quat {
+func (q F64Quat) NormalizeFastest() F64Quat {
     invNorm := q.LengthFastest().RcpFastest().Raw
     return QuatFromRaw(
         fix64.Mul(q.RawX, invNorm),
@@ -248,21 +248,21 @@ func (q Quat) NormalizeFastest() Quat {
     )
 }
 
-func (q Quat) Slerp(q2 Quat, t F64) Quat {
-    epsilon := Ratio(1, 1000000)
+func (q F64Quat) Slerp(q2 F64Quat, t F64) F64Quat {
+    epsilon := F64Ratio(1, 1000000)
     cosOmega := q.QuatX().Mul(q2.QuatX()).Add(q.QuatY().Mul(q2.QuatY())).Add(q.QuatZ().Mul(q2.QuatZ())).Add(q.QuatW().Mul(q2.QuatW()))
 
     flip := false
 
-    if cosOmega.LT(FromInt32(0)) {
+    if cosOmega.LT(F64FromInt32(0)) {
         flip = true
         cosOmega = cosOmega.Negate()
     }
 
     var s1, s2 F64
-    if cosOmega.GT(One.Sub(epsilon)) {
+    if cosOmega.GT(F64One.Sub(epsilon)) {
         // Too close, do straight linear interpolation.
-        s1 = One.Sub(t)
+        s1 = F64One.Sub(t)
         if flip {
             s2 = t.Negate()
         } else {
@@ -272,7 +272,7 @@ func (q Quat) Slerp(q2 Quat, t F64) Quat {
         omega := cosOmega.AcosFastest()
         invSinOmega := omega.SinFastest().RcpFastest()
 
-        s1 = One.Sub(t).Mul(omega).SinFastest().Mul(invSinOmega)
+        s1 = F64One.Sub(t).Mul(omega).SinFastest().Mul(invSinOmega)
         if flip {
             s2 = t.Mul(omega).SinFastest().Negate().Mul(invSinOmega)
         } else {
@@ -288,12 +288,12 @@ func (q Quat) Slerp(q2 Quat, t F64) Quat {
     )
 }
 
-func (q Quat) Lerp(q2 Quat, t F64) Quat {
-    t1 := One.Sub(t)
+func (q F64Quat) Lerp(q2 F64Quat, t F64) F64Quat {
+    t1 := F64One.Sub(t)
     dot := q.QuatX().Mul(q2.QuatX()).Add(q.QuatY().Mul(q2.QuatY())).Add(q.QuatZ().Mul(q2.QuatZ())).Add(q.QuatW().Mul(q2.QuatW()))
 
-    var r Quat
-    if dot.GE(FromInt32(0)) {
+    var r F64Quat
+    if dot.GE(F64FromInt32(0)) {
         r = FromF64(
             t1.Mul(q.QuatX()).Add(t.Mul(q2.QuatX())),
             t1.Mul(q.QuatY()).Add(t.Mul(q2.QuatY())),
@@ -313,23 +313,23 @@ func (q Quat) Lerp(q2 Quat, t F64) Quat {
 }
 
 // Concatenate two Quaternions; the result represents the value1 rotation followed by the value2 rotation.
-func (q Quat) Concatenate(q2 Quat) Quat {
+func (q F64Quat) Concatenate(q2 F64Quat) F64Quat {
     return q.Mul(q2)
 }
 
 // RotateVector Rotates a vector by the unit quaternion.
-func (q Quat) RotateVector(v Vec3) Vec3 {
+func (q F64Quat) RotateVector(v F64Vec3) F64Vec3 {
     // From https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
     u := Vec3FromF64(q.QuatX(), q.QuatY(), q.QuatZ())
     s := q.QuatW()
 
-    return u.MulF64(Two.Mul(u.Dot(v))).Add(v.MulF64(s.Mul(s).Sub(u.Dot(u)))).Add(Two.Mul(s).MulVec3(u.Cross(v)))
+    return u.MulF64(F64Two.Mul(u.Dot(v))).Add(v.MulF64(s.Mul(s).Sub(u.Dot(u)))).Add(F64Two.Mul(s).MulVec3(u.Cross(v)))
 }
 
-func (q Quat) Equals(obj Quat) bool {
+func (q F64Quat) Equals(obj F64Quat) bool {
     return reflect.DeepEqual(q, obj)
 }
 
-func (q Quat) ToString() string {
+func (q F64Quat) ToString() string {
     return fmt.Sprintf(`(%s, %s, %s, %s)`, fix64.ToString(q.RawX), fix64.ToString(q.RawY), fix64.ToString(q.RawZ), fix64.ToString(q.RawW))
 }
