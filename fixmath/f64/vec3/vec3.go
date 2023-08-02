@@ -90,8 +90,8 @@ func (v Vec3) Z() f64.F64 {
     return f64.FromRaw(v.RawZ)
 }
 
-// Sub1 -v
-func (v Vec3) Sub1() Vec3 {
+// Negate -v
+func (v Vec3) Negate() Vec3 {
     return FromRaw(-v.RawX, -v.RawY, -v.RawZ)
 }
 
@@ -120,6 +120,31 @@ func (v Vec3) Mod(b Vec3) Vec3 {
     return FromRaw(v.RawX%b.RawX, v.RawY%b.RawY, v.RawZ%b.RawZ)
 }
 
+// AddF64 v + b
+func (v Vec3) AddF64(b f64.F64) Vec3 {
+    return FromRaw(v.RawX+b.Raw, v.RawY+b.Raw, v.RawZ+b.Raw)
+}
+
+// SubF64 v - b
+func (v Vec3) SubF64(b f64.F64) Vec3 {
+    return FromRaw(v.RawX-b.Raw, v.RawY-b.Raw, v.RawZ-b.Raw)
+}
+
+// MulF64 v * b
+func (v Vec3) MulF64(b f64.F64) Vec3 {
+    return FromRaw(fix64.Mul(v.RawX, b.Raw), fix64.Mul(v.RawY, b.Raw), fix64.Mul(v.RawZ, b.Raw))
+}
+
+// DivPreciseF64 v / b
+func (v Vec3) DivPreciseF64(b f64.F64) Vec3 {
+    return FromRaw(fix64.DivPrecise(v.RawX, b.Raw), fix64.DivPrecise(v.RawY, b.Raw), fix64.DivPrecise(v.RawZ, b.Raw))
+}
+
+// ModF64 v % b
+func (v Vec3) ModF64(b f64.F64) Vec3 {
+    return FromRaw(v.RawX%b.Raw, v.RawY%b.Raw, v.RawZ%b.Raw)
+}
+
 // EQ v == b
 func (v Vec3) EQ(b Vec3) bool {
     return v.RawX == b.RawX && v.RawY == b.RawY && v.RawZ == b.RawZ
@@ -128,6 +153,18 @@ func (v Vec3) EQ(b Vec3) bool {
 // NE v != b
 func (v Vec3) NE(b Vec3) bool {
     return v.RawX != b.RawX || v.RawY != b.RawY || v.RawZ != b.RawZ
+}
+
+func (v Vec3) DivF64(b f64.F64) Vec3 {
+    return FromRaw(fix64.Div(v.RawX, b.Raw), fix64.Div(v.RawY, b.Raw), fix64.Div(v.RawZ, b.Raw))
+}
+
+func (v Vec3) DivFastF64(b f64.F64) Vec3 {
+    return FromRaw(fix64.DivFast(v.RawX, b.Raw), fix64.DivFast(v.RawY, b.Raw), fix64.DivFast(v.RawZ, b.Raw))
+}
+
+func (v Vec3) DivFastestF64(b f64.F64) Vec3 {
+    return FromRaw(fix64.DivFastest(v.RawX, b.Raw), fix64.DivFastest(v.RawY, b.Raw), fix64.DivFastest(v.RawZ, b.Raw))
 }
 
 func (v Vec3) Div(b Vec3) Vec3 {

@@ -91,8 +91,8 @@ func (v Vec4) W() f64.F64 {
     return f64.FromRaw(v.RawW)
 }
 
-// Sub1 -v
-func (v Vec4) Sub1() Vec4 {
+// Negate -v
+func (v Vec4) Negate() Vec4 {
     return FromRaw(-v.RawX, -v.RawY, -v.RawZ, -v.RawW)
 }
 
@@ -119,6 +119,31 @@ func (v Vec4) DivPrecise(b Vec4) Vec4 {
 // Mod v % b
 func (v Vec4) Mod(b Vec4) Vec4 {
     return FromRaw(v.RawX%b.RawX, v.RawY%b.RawY, v.RawZ%b.RawZ, v.RawW%b.RawW)
+}
+
+// AddF64 v + b
+func (v Vec4) AddF64(b f64.F64) Vec4 {
+    return FromRaw(v.RawX+b.Raw, v.RawY+b.Raw, v.RawZ+b.Raw, v.RawW+b.Raw)
+}
+
+// SubF64 v - b
+func (v Vec4) SubF64(b f64.F64) Vec4 {
+    return FromRaw(v.RawX-b.Raw, v.RawY-b.Raw, v.RawZ-b.Raw, v.RawW-b.Raw)
+}
+
+// MulF64 v * b
+func (v Vec4) MulF64(b f64.F64) Vec4 {
+    return FromRaw(fix64.Mul(v.RawX, b.Raw), fix64.Mul(v.RawY, b.Raw), fix64.Mul(v.RawZ, b.Raw), fix64.Mul(v.RawW, b.Raw))
+}
+
+// DivPreciseF64 v / b
+func (v Vec4) DivPreciseF64(b f64.F64) Vec4 {
+    return FromRaw(fix64.DivPrecise(v.RawX, b.Raw), fix64.DivPrecise(v.RawY, b.Raw), fix64.DivPrecise(v.RawZ, b.Raw), fix64.DivPrecise(v.RawW, b.Raw))
+}
+
+// ModF64 v % b
+func (v Vec4) ModF64(b f64.F64) Vec4 {
+    return FromRaw(v.RawX%b.Raw, v.RawY%b.Raw, v.RawZ%b.Raw, v.RawW%b.Raw)
 }
 
 // EQ v == b
