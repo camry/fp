@@ -8,6 +8,17 @@ import (
     "github.com/camry/fp/fixmath/f64"
 )
 
+var (
+    Zero  = FromRaw(fix64.Zero, fix64.Zero)
+    One   = FromRaw(fix64.One, fix64.One)
+    Down  = FromRaw(fix64.Zero, fix64.Neg1)
+    Up    = FromRaw(fix64.Zero, fix64.One)
+    Left  = FromRaw(fix64.Neg1, fix64.Zero)
+    Right = FromRaw(fix64.One, fix64.Zero)
+    AxisX = FromRaw(fix64.One, fix64.Zero)
+    AxisY = FromRaw(fix64.Zero, fix64.One)
+)
+
 // Vec2 struct with signed 32.32 fixed point components.
 type Vec2 struct {
     RawX int64
