@@ -1,6 +1,7 @@
 package vec2
 
 import (
+    "fmt"
     "reflect"
 
     "github.com/camry/fp/fix64"
@@ -297,4 +298,8 @@ func (v Vec2) Lerp(b Vec2, t f64.F64) Vec2 {
 
 func (v Vec2) Equals(obj Vec2) bool {
     return reflect.DeepEqual(v, obj)
+}
+
+func (v Vec2) ToString() string {
+    return fmt.Sprintf(`(%s, %s)`, fix64.ToString(v.RawX), fix64.ToString(v.RawY))
 }
