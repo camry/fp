@@ -2,9 +2,10 @@ package vec3
 
 import (
     "fmt"
+    "reflect"
+
     "github.com/camry/fp/fix64"
     "github.com/camry/fp/fixmath/f64"
-    "reflect"
 )
 
 var (

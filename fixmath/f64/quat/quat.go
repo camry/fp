@@ -2,10 +2,11 @@ package quat
 
 import (
     "fmt"
+    "reflect"
+
     "github.com/camry/fp/fix64"
     "github.com/camry/fp/fixmath/f64"
     "github.com/camry/fp/fixmath/f64/vec3"
-    "reflect"
 )
 
 var Identity = FromRaw(fix64.Zero, fix64.Zero, fix64.Zero, fix64.One)

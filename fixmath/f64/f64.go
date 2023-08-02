@@ -1,13 +1,13 @@
 package f64
 
 import (
-    "github.com/camry/fp/fixmath/f64/vec2"
-    "github.com/camry/fp/fixmath/f64/vec3"
-    "github.com/camry/fp/fixmath/f64/vec4"
     "reflect"
 
     "github.com/camry/fp/fix64"
     "github.com/camry/fp/fixmath/f32"
+    "github.com/camry/fp/fixmath/f64/vec2"
+    "github.com/camry/fp/fixmath/f64/vec3"
+    "github.com/camry/fp/fixmath/f64/vec4"
 )
 
 var (
