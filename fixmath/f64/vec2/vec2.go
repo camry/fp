@@ -56,22 +56,30 @@ func FromFloat64(x, y float64) Vec2 {
 //
 // To call this function with an array, you must do:
 //
-//     Min(a, b)
+//     Min(v0, v1)
 //
 // This makes it harder to accidentally call Min with 0 arguments.
-func Min(a Vec2, b Vec2) Vec2 {
-    return FromRaw(fix64.Min(a.RawX, b.RawX), fix64.Min(a.RawY, b.RawY))
+func Min(v0 Vec2, v1 Vec2) Vec2 {
+    return FromRaw(fix64.Min(v0.RawX, v1.RawX), fix64.Min(v0.RawY, v1.RawY))
 }
 
 // Max returns the largest Vec2 that was passed in the arguments.
 //
 // To call this function with an array, you must do:
 //
-//     Max(a, b)
+//     Max(v0, v1)
 //
 // This makes it harder to accidentally call Max with 0 arguments.
-func Max(a Vec2, b Vec2) Vec2 {
-    return FromRaw(fix64.Max(a.RawX, b.RawX), fix64.Max(a.RawY, b.RawY))
+func Max(v0 Vec2, v1 Vec2) Vec2 {
+    return FromRaw(fix64.Max(v0.RawX, v1.RawX), fix64.Max(v0.RawY, v1.RawY))
+}
+
+func (v Vec2) X() f64.F64 {
+    return f64.FromRaw(v.RawX)
+}
+
+func (v Vec2) Y() f64.F64 {
+    return f64.FromRaw(v.RawY)
 }
 
 // Sub1 -v
@@ -111,7 +119,7 @@ func (v Vec2) EQ(b Vec2) bool {
 
 // NE v != b
 func (v Vec2) NE(b Vec2) bool {
-    return v.RawX == b.RawX && v.RawY == b.RawY
+    return v.RawX != b.RawX || v.RawY != b.RawY
 }
 
 func (v Vec2) Div(b Vec2) Vec2 {
