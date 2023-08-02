@@ -1,9 +1,10 @@
 package f64
 
 import (
+    "reflect"
+
     "github.com/camry/fp/fix64"
     "github.com/camry/fp/fixmath/f32"
-    "reflect"
 )
 
 var (
@@ -75,7 +76,7 @@ func Ratio1000(a int32) F64 {
     return FromRaw((int64(a) << 32) / 1000)
 }
 
-// Min returns the smallest Fix64 that was passed in the arguments.
+// Min returns the smallest F64 that was passed in the arguments.
 //
 // To call this function with an array, you must do:
 //
@@ -92,7 +93,7 @@ func Min(first F64, rest ...F64) F64 {
     return ans
 }
 
-// Max returns the largest Fix64 that was passed in the arguments.
+// Max returns the largest F64 that was passed in the arguments.
 //
 // To call this function with an array, you must do:
 //
@@ -467,18 +468,18 @@ func (f F64) PowFastest(b F64) F64 {
     return FromRaw(fix64.PowFastest(f.Raw, b.Raw))
 }
 
-func (f F64) Clamp(a, min, max F64) F64 {
-    return FromRaw(fix64.Clamp(a.Raw, min.Raw, max.Raw))
+func (f F64) Clamp(min, max F64) F64 {
+    return FromRaw(fix64.Clamp(f.Raw, min.Raw, max.Raw))
 }
 
 func (f F64) Clamp01() F64 {
     return FromRaw(fix64.Clamp(f.Raw, fix64.Zero, fix64.One))
 }
 
-func (f F64) Lerp(a, b, t F64) F64 {
+func (f F64) Lerp(b, t F64) F64 {
     tb := t.Raw
     ta := fix64.One - tb
-    return FromRaw(fix64.Mul(a.Raw, ta) + fix64.Mul(b.Raw, tb))
+    return FromRaw(fix64.Mul(f.Raw, ta) + fix64.Mul(b.Raw, tb))
 }
 
 func (f F64) Equals(obj F64) bool {
