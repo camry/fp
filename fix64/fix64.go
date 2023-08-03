@@ -6,6 +6,8 @@ import (
     "github.com/camry/fp/fixutil"
 )
 
+// Direct fixed point (signed 32.32) functions.
+
 const (
     Shift        int32 = 32
     FractionMask int64 = (1 << Shift) - 1
