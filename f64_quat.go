@@ -46,7 +46,7 @@ func FromVector(v F64Vec3, w F64) F64Quat {
 func FromAxisAngle(axis F64Vec3, angle F64) F64Quat {
     halfAngle := angle.Div2()
     halfAngleSinFastest := halfAngle.SinFastest()
-    return FromVector(axis.Mul(Vec3FromF64(halfAngleSinFastest, halfAngleSinFastest, halfAngleSinFastest)), halfAngle.CosFastest())
+    return FromVector(axis.Mul(F64Vec3FromF64(halfAngleSinFastest, halfAngleSinFastest, halfAngleSinFastest)), halfAngle.CosFastest())
 }
 
 func FromYawPitchRoll(yawY, pitchX, rollZ F64) F64Quat {
@@ -88,9 +88,9 @@ func FromTwoVectors(a, b F64Vec3) F64Quat {
         realPart = F64Zero
         cond := a.X().Abs().GT(a.Z().Abs())
         if cond {
-            v = Vec3FromF64(a.Y().Negate(), a.X(), F64Zero)
+            v = F64Vec3FromF64(a.Y().Negate(), a.X(), F64Zero)
         } else {
-            v = Vec3FromF64(F64Zero, a.Z().Negate(), a.Y())
+            v = F64Vec3FromF64(F64Zero, a.Z().Negate(), a.Y())
         }
     } else {
         /* Otherwise, build quaternion the standard way. */
@@ -102,18 +102,18 @@ func FromTwoVectors(a, b F64Vec3) F64Quat {
 
 func LookRotation(dir, up F64Vec3) F64Quat {
     // From: https://answers.unity.com/questions/819699/calculate-quaternionlookrotation-manually.html
-    if dir == Vec3Zero {
+    if dir == F64Vec3Zero {
         return Identity
     }
 
     if up != dir {
         up = up.NormalizeFastest()
         v := dir.Add(up).MulF64(up.Dot(dir).Negate())
-        q := FromTwoVectors(Vec3AxisZ, v)
+        q := FromTwoVectors(F64Vec3AxisZ, v)
         return FromTwoVectors(v, dir).Mul(q)
     } else {
 
-        return FromTwoVectors(Vec3AxisZ, dir)
+        return FromTwoVectors(F64Vec3AxisZ, dir)
     }
 }
 
@@ -320,7 +320,7 @@ func (q F64Quat) Concatenate(q2 F64Quat) F64Quat {
 // RotateVector Rotates a vector by the unit quaternion.
 func (q F64Quat) RotateVector(v F64Vec3) F64Vec3 {
     // From https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
-    u := Vec3FromF64(q.QuatX(), q.QuatY(), q.QuatZ())
+    u := F64Vec3FromF64(q.QuatX(), q.QuatY(), q.QuatZ())
     s := q.QuatW()
 
     return u.MulF64(F64Two.Mul(u.Dot(v))).Add(v.MulF64(s.Mul(s).Sub(u.Dot(u)))).Add(F64Two.Mul(s).MulVec3(u.Cross(v)))

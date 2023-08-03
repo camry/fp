@@ -151,8 +151,7 @@ func (f F64) Float64() float64 {
 }
 
 func (f F64) F32() F32 {
-    // TODO not implements
-    panic("not implements")
+    return F32FromRaw(int32(f.Raw >> 16))
 }
 
 /************************************/
@@ -191,77 +190,77 @@ func (f F64) Mod(v2 F64) F64 {
 
 // AddVec2 f + v2
 func (f F64) AddVec2(v2 F64Vec2) F64Vec2 {
-    return Vec2FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY)
+    return F64Vec2FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY)
 }
 
 // SubVec2 f - v2
 func (f F64) SubVec2(v2 F64Vec2) F64Vec2 {
-    return Vec2FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY)
+    return F64Vec2FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY)
 }
 
 // MulVec2 f * v2
 func (f F64) MulVec2(v2 F64Vec2) F64Vec2 {
-    return Vec2FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY))
+    return F64Vec2FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY))
 }
 
 // DivPreciseVec2 f / v2
 func (f F64) DivPreciseVec2(v2 F64Vec2) F64Vec2 {
-    return Vec2FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY))
+    return F64Vec2FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY))
 }
 
 // ModVec2 f % v2
 func (f F64) ModVec2(v2 F64Vec2) F64Vec2 {
-    return Vec2FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY)
+    return F64Vec2FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY)
 }
 
 // AddVec3 f + v2
 func (f F64) AddVec3(v2 F64Vec3) F64Vec3 {
-    return Vec3FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY, f.Raw+v2.RawZ)
+    return F64Vec3FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY, f.Raw+v2.RawZ)
 }
 
 // SubVec3 f - v2
 func (f F64) SubVec3(v2 F64Vec3) F64Vec3 {
-    return Vec3FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY, f.Raw-v2.RawZ)
+    return F64Vec3FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY, f.Raw-v2.RawZ)
 }
 
 // MulVec3 f * v2
 func (f F64) MulVec3(v2 F64Vec3) F64Vec3 {
-    return Vec3FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY), fix64.Mul(f.Raw, v2.RawZ))
+    return F64Vec3FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY), fix64.Mul(f.Raw, v2.RawZ))
 }
 
 // DivPreciseVec3 f / v2
 func (f F64) DivPreciseVec3(v2 F64Vec3) F64Vec3 {
-    return Vec3FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY), fix64.DivPrecise(f.Raw, v2.RawZ))
+    return F64Vec3FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY), fix64.DivPrecise(f.Raw, v2.RawZ))
 }
 
 // ModVec3 f % v2
 func (f F64) ModVec3(v2 F64Vec3) F64Vec3 {
-    return Vec3FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY, f.Raw%v2.RawZ)
+    return F64Vec3FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY, f.Raw%v2.RawZ)
 }
 
 // AddVec4 f + v2
 func (f F64) AddVec4(v2 F64Vec4) F64Vec4 {
-    return Vec4FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY, f.Raw+v2.RawZ, f.Raw+v2.RawW)
+    return F64Vec4FromRaw(f.Raw+v2.RawX, f.Raw+v2.RawY, f.Raw+v2.RawZ, f.Raw+v2.RawW)
 }
 
 // SubVec4 f - v2
 func (f F64) SubVec4(v2 F64Vec4) F64Vec4 {
-    return Vec4FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY, f.Raw-v2.RawZ, f.Raw-v2.RawW)
+    return F64Vec4FromRaw(f.Raw-v2.RawX, f.Raw-v2.RawY, f.Raw-v2.RawZ, f.Raw-v2.RawW)
 }
 
 // MulVec4 f * v2
 func (f F64) MulVec4(v2 F64Vec4) F64Vec4 {
-    return Vec4FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY), fix64.Mul(f.Raw, v2.RawZ), fix64.Mul(f.Raw, v2.RawW))
+    return F64Vec4FromRaw(fix64.Mul(f.Raw, v2.RawX), fix64.Mul(f.Raw, v2.RawY), fix64.Mul(f.Raw, v2.RawZ), fix64.Mul(f.Raw, v2.RawW))
 }
 
 // DivPreciseVec4 f / v2
 func (f F64) DivPreciseVec4(v2 F64Vec4) F64Vec4 {
-    return Vec4FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY), fix64.DivPrecise(f.Raw, v2.RawZ), fix64.DivPrecise(f.Raw, v2.RawW))
+    return F64Vec4FromRaw(fix64.DivPrecise(f.Raw, v2.RawX), fix64.DivPrecise(f.Raw, v2.RawY), fix64.DivPrecise(f.Raw, v2.RawZ), fix64.DivPrecise(f.Raw, v2.RawW))
 }
 
 // ModVec4 f % v2
 func (f F64) ModVec4(v2 F64Vec4) F64Vec4 {
-    return Vec4FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY, f.Raw%v2.RawZ, f.Raw%v2.RawW)
+    return F64Vec4FromRaw(f.Raw%v2.RawX, f.Raw%v2.RawY, f.Raw%v2.RawZ, f.Raw%v2.RawW)
 }
 
 // Add2 f++
