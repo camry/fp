@@ -1,8 +1,9 @@
 package fix64
 
 import (
-    "github.com/camry/fp/fixutil"
     "strconv"
+
+    "github.com/camry/fp/fixutil"
 )
 
 const (
