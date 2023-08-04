@@ -16,7 +16,7 @@ var (
     F64Vec4AxisW = F64Vec4FromRaw(fix64.Zero, fix64.Zero, fix64.Zero, fix64.One)
 )
 
-// F64Vec4 struct with signed 16.16 fixed point components.
+// F64Vec4 struct with signed 32.32 fixed point components.
 type F64Vec4 struct {
     RawX int64
     RawY int64

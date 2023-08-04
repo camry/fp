@@ -21,7 +21,7 @@ var (
     F32Vec3AxisZ   = F32Vec3FromRaw(fix32.Zero, fix32.Zero, fix32.One)
 )
 
-// F32Vec3 struct with signed 32.32 fixed point components.
+// F32Vec3 struct with signed 16.16 fixed point components.
 type F32Vec3 struct {
     RawX int32
     RawY int32
