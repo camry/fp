@@ -7,7 +7,7 @@ import (
 )
 
 var (
-    Neg1        = F64FromRaw(fix64.Neg1)
+    F64Neg1     = F64FromRaw(fix64.Neg1)
     F64Zero     = F64FromRaw(fix64.Zero)
     F64Half     = F64FromRaw(fix64.Half)
     F64One      = F64FromRaw(fix64.One)
