@@ -1,8 +1,9 @@
 package fp_test
 
 import (
-    "github.com/camry/fp"
     "testing"
+
+    "github.com/camry/fp"
 
     "github.com/stretchr/testify/assert"
 )
@@ -43,4 +44,9 @@ func TestFix64(t *testing.T) {
     f1 := fp.F64FromInt32(300).Mul(fp.F64FromInt32(300)).DivPrecise(fp.F64FromInt32(300).Add(fp.F64FromInt32(10).Mul(fp.F64FromInt32(5).Mul(fp.F64FromInt32(1).Sub(fp.F64FromFloat32(0))))))
     assert.Equal(t, f1.Float32(), float32(257.14285))
     assert.Equal(t, f1.Float64(), 257.1428571427241)
+}
+
+func TestF64_Pow(t *testing.T) {
+    f1 := fp.F64FromInt32(1).Add(fp.F64FromFloat32(0.08)).Pow(fp.F64FromInt32(3))
+    assert.Equal(t, f1.Float32(), float32(1.259712))
 }

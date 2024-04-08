@@ -825,11 +825,11 @@ func Log(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
+
     y := int64(fixutil.LogPoly5Lut8(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
@@ -847,11 +847,11 @@ func LogFast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
+
     y := int64(fixutil.LogPoly3Lut8(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
@@ -869,11 +869,11 @@ func LogFastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
+
     y := int64(fixutil.LogPoly5(n-ONE) << 2)
 
     // Combine integer and fractional parts (into s32.32).
@@ -889,11 +889,10 @@ func Log2(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
@@ -912,11 +911,10 @@ func Log2Fast(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
@@ -935,11 +933,10 @@ func Log2Fastest(x int64) int64 {
     offset := 31 - nlz(uint64(x))
     var n int32
     if offset >= 0 {
-        n = int32(x >> offset)
+        n = int32(x >> offset >> 2)
     } else {
-        n = int32(x << -offset)
+        n = int32(x << -offset >> 2)
     }
-    n >>= 2
 
     // Polynomial approximation of mantissa.
     const ONE int32 = 1 << 30
