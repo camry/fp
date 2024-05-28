@@ -3,8 +3,9 @@ package fix64_test
 import (
     "testing"
 
-    "github.com/camry/fp/fix64"
     "github.com/stretchr/testify/assert"
+
+    "github.com/camry/fp/fix64"
 )
 
 func TestAdd(t *testing.T) {
@@ -38,6 +39,12 @@ func TestDiv(t *testing.T) {
     f1 := fix64.FromInt32(2147483647)
     f2 := fix64.FromFloat32(4567822)
     assert.Equal(t, fix64.ToFloat32(fix64.Div(f1, f2)), float32(470.13297))
+}
+
+func TestDivPrecise(t *testing.T) {
+    f1 := fix64.FromInt32(2147483647)
+    f2 := fix64.FromFloat32(4567822)
+    assert.Equal(t, fix64.ToFloat32(fix64.DivPrecise(f1, f2)), float32(470.13297))
 }
 
 func TestFix64(t *testing.T) {

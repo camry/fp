@@ -228,6 +228,10 @@ func nlz(v uint64) int32 {
 
 // DivPrecise Divides two FP values.
 func DivPrecise(argA, argB int64) int64 {
+    if argB == MinValue || argB == 0 {
+        return 0
+    }
+
     signDif := argA ^ argB
 
     const b uint64 = 0x100000000 // Number base (32 bits)
